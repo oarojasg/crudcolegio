@@ -1,0 +1,75 @@
+﻿@page "/grados"
+@inject HttpClient Http
+@inject IConfiguration Configuration
+
+<PageTitle>Grados</PageTitle>
+
+@if (grados == null && profesores == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Profesor</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var grado in grados)
+            {
+                <tr>
+                    <td>@grado.Id</td>
+                    <td>@grado.Nombre</td>
+                    <td>@ObtenerNombreCompletoProfesor(grado.ProfesorId ?? 0)</td>
+                    <td>
+                        <button class="btn btn-primary"
+                        @onclick="() => Editar(grado.Id)">
+                            Editar
+                        </button>
+                    </td>
+                    <td><button class="btn btn-danger">Eliminar</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@code {
+
+    private Contract.Grados? gruposGrados;
+    private Contract.Grado[]? grados;
+    private Contract.Profesores? docentes;
+    private Contract.Profesor[]? profesores;
+    private string? _baseAddress;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _baseAddress = Configuration.GetSection("ApiBaseAddress").Value;
+            gruposGrados = await Http.GetFromJsonAsync<Contract.Grados>($"{_baseAddress}/Grado");
+            docentes = await Http.GetFromJsonAsync<Contract.Profesores>($"{_baseAddress}/Profesor");
+            profesores = docentes!.profesores;
+            grados = gruposGrados!.grados;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private string ObtenerNombreCompletoProfesor(int id)
+    {
+        var profesor = profesores!.FirstOrDefault(p => p.Id.Equals(id));
+        return $"{profesor!.Nombre} {profesor.Apellidos}";
+    }
+    private void Editar(int id)
+    {
+
+        var grado = grados!.FirstOrDefault(grado => grado.Id.Equals(id));
+    }
+}

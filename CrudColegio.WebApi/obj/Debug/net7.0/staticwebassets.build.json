@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "TGaFF3QJBKyEhBzXckjSB9IjC+CSvpbd8lSG8SmCEkk=",
+  "Source": "CrudColegio.WebApi",
+  "BasePath": "_content/CrudColegio.WebApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

@@ -1,0 +1,85 @@
+﻿@page "/salones"
+@inject HttpClient Http
+@inject IConfiguration Configuration
+
+<PageTitle>Salones</PageTitle>
+
+@if (salones == null && alumnos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Alumno</th>
+                <th>Grado</th>
+                <th>Seccion</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var salon in salones!)
+            {
+                <tr>
+                    <td>@salon.Id</td>
+                    <td>@ObtenerNombreCompletoAlumno(salon.AlumnoId ?? 0)</td>
+                    <td>@ObtenerNombreGrado(salon.GradoId ?? 0)</td>
+                    <td>@salon.Seccion</td>
+                    <td>
+                        <button class="btn btn-primary"
+                        @onclick="() => Editar(salon.Id)">
+                            Editar
+                        </button>
+                    </td>
+                    <td><button class="btn btn-danger">Eliminar</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@code {
+
+    private Contract.Salones? gruposSalones;
+    private Contract.Salon[]? salones;
+    private Contract.Grados? gruposGrados;
+    private Contract.Grado[]? grados;
+    private Contract.Alumnos? gruposAlumnos;
+    private Contract.Alumno[]? alumnos;
+    private string? _baseAddress;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _baseAddress = Configuration.GetSection("ApiBaseAddress").Value;
+            gruposSalones = await Http.GetFromJsonAsync<Contract.Salones>($"{_baseAddress}/Salon");
+            gruposGrados = await Http.GetFromJsonAsync<Contract.Grados>($"{_baseAddress}/Grado");
+            gruposAlumnos = await Http.GetFromJsonAsync<Contract.Alumnos>($"{_baseAddress}/Alumno");
+            salones = gruposSalones!.salones;
+            grados = gruposGrados!.grados;
+            alumnos = gruposAlumnos!.alumnos;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private string ObtenerNombreGrado(int id)
+    {
+        var grado = grados!.FirstOrDefault(p => p.Id.Equals(id));
+        return $"{grado!.Nombre}";
+    }
+    private string ObtenerNombreCompletoAlumno(int id)
+    {
+        var alumno = alumnos!.FirstOrDefault(p => p.Id.Equals(id));
+        return $"{alumno!.Nombre} {alumno.Apellidos}";
+    }
+    private void Editar(int id)
+    {
+        var salon = salones!.FirstOrDefault(salon => salon.Id.Equals(id));
+    }
+}

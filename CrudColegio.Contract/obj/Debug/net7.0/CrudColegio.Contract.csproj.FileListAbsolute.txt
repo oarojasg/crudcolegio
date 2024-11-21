@@ -1,0 +1,12 @@
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\bin\Debug\net7.0\CrudColegio.Contract.deps.json
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\bin\Debug\net7.0\CrudColegio.Contract.dll
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\bin\Debug\net7.0\CrudColegio.Contract.pdb
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\obj\Debug\net7.0\CrudColegio.Contract.csproj.AssemblyReference.cache
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\obj\Debug\net7.0\CrudColegio.Contract.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\obj\Debug\net7.0\CrudColegio.Contract.AssemblyInfoInputs.cache
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\obj\Debug\net7.0\CrudColegio.Contract.AssemblyInfo.cs
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\obj\Debug\net7.0\CrudColegio.Contract.csproj.CoreCompileInputs.cache
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\obj\Debug\net7.0\CrudColegio.Contract.dll
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\obj\Debug\net7.0\refint\CrudColegio.Contract.dll
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\obj\Debug\net7.0\CrudColegio.Contract.pdb
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Contract\obj\Debug\net7.0\ref\CrudColegio.Contract.dll

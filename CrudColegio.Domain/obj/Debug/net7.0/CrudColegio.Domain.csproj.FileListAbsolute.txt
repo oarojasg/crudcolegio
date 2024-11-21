@@ -1,0 +1,15 @@
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\bin\Debug\net7.0\CrudColegio.Domain.deps.json
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\bin\Debug\net7.0\CrudColegio.Domain.dll
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\bin\Debug\net7.0\CrudColegio.Domain.pdb
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\bin\Debug\net7.0\CrudColegio.Contract.dll
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\bin\Debug\net7.0\CrudColegio.Contract.pdb
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\obj\Debug\net7.0\CrudColegio.Domain.csproj.AssemblyReference.cache
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\obj\Debug\net7.0\CrudColegio.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\obj\Debug\net7.0\CrudColegio.Domain.AssemblyInfoInputs.cache
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\obj\Debug\net7.0\CrudColegio.Domain.AssemblyInfo.cs
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\obj\Debug\net7.0\CrudColegio.Domain.csproj.CoreCompileInputs.cache
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\obj\Debug\net7.0\CrudColegio.Domain.csproj.CopyComplete
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\obj\Debug\net7.0\CrudColegio.Domain.dll
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\obj\Debug\net7.0\refint\CrudColegio.Domain.dll
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\obj\Debug\net7.0\CrudColegio.Domain.pdb
+C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Domain\obj\Debug\net7.0\ref\CrudColegio.Domain.dll

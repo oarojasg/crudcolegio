@@ -1,0 +1,61 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = CrudColegio.Website
+build_property.RootNamespace = CrudColegio.Website
+build_property.ProjectDir = C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Website\
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\oscar\OneDrive\Documentos\PruebasTecnicas\ViaroNetworks\CrudColegio\CrudColegio.Website
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/Pages/Alumnos.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWx1bW5vcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/Pages/EditarAlumno.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWRpdGFyQWx1bW5vLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/Pages/Grados.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR3JhZG9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/Pages/Profesores.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZmVzb3Jlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/Pages/Salones.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2Fsb25lcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-v43efdhsxa
+
+[C:/Users/oscar/OneDrive/Documentos/PruebasTecnicas/ViaroNetworks/CrudColegio/CrudColegio.Website/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-p6iuujprlh

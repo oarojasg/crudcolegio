@@ -1,0 +1,69 @@
+﻿@page "/profesores"
+@inject HttpClient Http
+@inject IConfiguration Configuration
+
+<PageTitle>Profesores</PageTitle>
+
+@if (profesores == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Género</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var profesor in profesores)
+            {
+                <tr>
+                    <td>@profesor.Id</td>
+                    <td>@profesor.Nombre</td>
+                    <td>@profesor.Apellidos</td>
+                    <td>@profesor.Genero</td>
+                    <td>
+                        <button class="btn btn-primary"
+                        @onclick="() => Editar(profesor.Id)">
+                            Editar
+                        </button>
+                    </td>
+                    <td><button class="btn btn-danger">Eliminar</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@code {
+
+    private Contract.Profesores? docentes;
+    private Contract.Profesor[]? profesores;
+    private string? _baseAddress;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _baseAddress = Configuration.GetSection("ApiBaseAddress").Value;
+            docentes = await Http.GetFromJsonAsync<Contract.Profesores>($"{_baseAddress}/Profesor");
+            profesores = docentes!.profesores;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private void Editar(int id)
+    {
+
+        var profesor = profesores!.FirstOrDefault(profesor => profesor.Id.Equals(id));
+    }
+}
+
