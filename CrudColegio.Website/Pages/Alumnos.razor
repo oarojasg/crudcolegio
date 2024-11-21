@@ -1,6 +1,7 @@
 ﻿@page "/alumnos"
 @inject HttpClient Http
 @inject IConfiguration Configuration
+@inject NavigationManager Navigation
 
 <PageTitle>Alumnos</PageTitle>
 
@@ -95,16 +96,21 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        _baseAddress = Configuration.GetSection("ApiBaseAddress").Value;
+        await CargarDatosTabla();  
+    }
+    private async Task CargarDatosTabla()
+    {
         try
         {
-            _baseAddress = Configuration.GetSection("ApiBaseAddress").Value;
+            alumnos = null;
             estudiantes = await Http.GetFromJsonAsync<Contract.Alumnos>($"{_baseAddress}/Alumno");
             alumnos = estudiantes!.alumnos;
         }
         catch (Exception ex)
         {
             throw ex;
-        }  
+        }
     }
     private void Editar(Contract.Alumno row)
     {
@@ -123,14 +129,33 @@ else
         IsModalVisible = false;
         alumno = null;
     }
-    private void Actualizar()
+    private async void Actualizar()
     {
-        //var rowToUpdate = Rows.FirstOrDefault(r => r.Id == SelectedRow.Id);
-        //if (rowToUpdate != null)
-        //{
-        //    rowToUpdate.Name = SelectedRow.Name;
-        //    rowToUpdate.Email = SelectedRow.Email;
-        //}
-        CloseModal();
+        try
+        {
+            var actualizacionExitosa = await ActualizarBackend();
+            if (actualizacionExitosa) ActualizarPagina();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private async Task<bool> ActualizarBackend()
+    {
+        Contract.Alumno alumnoActualizar = new Contract.Alumno(
+            (int)alumno!.Id, 
+            alumno.Nombre, 
+            alumno.Apellidos, 
+            alumno.Genero, 
+            (DateTime)alumno.FechaNacimiento!);
+        var resultado = await Http.PutAsJsonAsync<Contract.Alumno>(
+            $"{_baseAddress}/Alumno",
+            alumnoActualizar);
+        return resultado.IsSuccessStatusCode;
+    }
+    private void ActualizarPagina()
+    {
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
 }
