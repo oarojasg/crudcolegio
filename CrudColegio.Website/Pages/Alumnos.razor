@@ -38,6 +38,8 @@ else
             }
         </tbody>
     </table>
+    <br />
+    <button class="btn btn-primary" @onclick="Crear">Crear</button>
 
 }
 
@@ -47,7 +49,7 @@ else
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Editar alumno</h5>
+                    <h5 class="modal-title">@(tituloModalEditar ?? "")</h5>
                     <button type="button" class="btn-close" @onclick="CloseModalUpdate"></button>
                 </div>
                 <div class="modal-body">
@@ -60,7 +62,7 @@ else
                         <input type="text" id="editarApellidos" class="form-control" @bind="alumno!.Apellidos" />
                     </div>
                     <div class="mb-3">
-                        <label for="editarGenero" class="form-label">Genero</label>
+                        <label for="editarGenero" class="form-label">Género</label>
                         <select id="editarGenero" class="form-select" @bind="alumno!.Genero">
                             <option value="M">Masculino</option>
                             <option value="F">Femenino</option>
@@ -73,7 +75,7 @@ else
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" @onclick="CloseModalUpdate">Cerrar</button>
-                    <button type="button" class="btn btn-primary" @onclick="Actualizar">Guardar</button>
+                    <button type="button" class="btn btn-primary" @onclick="GuardarCambios">Guardar</button>
                 </div>
             </div>
         </div>
@@ -114,9 +116,11 @@ else
     private Contract.Alumno[]? alumnos;
     private bool IsModalUpdateVisible { get; set; }
     private bool IsModalDeleteVisible { get; set; }
+    private int? idAlumnoEditar { get; set; }
     private int? idAlumnoEliminar { get; set; }
     private RowData? alumno { get; set; }
     private string? _baseAddress;
+    private string? tituloModalEditar;
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,6 +140,11 @@ else
             throw ex;
         }
     }
+    private void Crear()
+    {
+        alumno = new RowData();
+        AbrirModalEditar();
+    }
     private void Editar(Contract.Alumno row)
     {
         alumno = new RowData
@@ -146,22 +155,60 @@ else
             Genero = row.Genero,
             FechaNacimiento = row.FechaNacimiento
         };
+        AbrirModalEditar();
+    }
+    private void AbrirModalEditar()
+    {
+        ConfigurarTituloEditar();
         IsModalUpdateVisible = true;
     }
-    private void Eliminar(Contract.Alumno row)
+    private void ConfigurarTituloEditar()
     {
-        idAlumnoEliminar = row.Id;
-        IsModalDeleteVisible = true;
+        if (EsNuevoRegistro()) tituloModalEditar = "Crear Alumno";
+        else tituloModalEditar = "Editar Alumno";
+    }
+    private bool EsNuevoRegistro()
+    {
+        return alumno?.Id == null || alumno.Id == 0;
     }
     private void CloseModalUpdate()
     {
         IsModalUpdateVisible = false;
         alumno = null;
     }
-    private void CloseModalDelete()
+    private void GuardarCambios()
     {
-        IsModalDeleteVisible = false;
-        idAlumnoEliminar = null;
+        if (EsNuevoRegistro()) Anadir();
+        else Actualizar();
+    }
+    private async void Anadir()
+    {
+        try
+        {
+            var actualizacionExitosa = await CrearBackend();
+            if (actualizacionExitosa) ActualizarPagina();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private async Task<bool> CrearBackend()
+    {
+        Contract.Alumno alumnoCrear = new Contract.Alumno(
+            (int)alumno!.Id,
+            alumno.Nombre,
+            alumno.Apellidos,
+            alumno.Genero,
+            (DateTime)alumno.FechaNacimiento!);
+        var resultado = await Http.PostAsJsonAsync<Contract.Alumno>(
+            $"{_baseAddress}/Alumno",
+            alumnoCrear);
+        return resultado.IsSuccessStatusCode;
+    }
+    private void ActualizarPagina()
+    {
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
     private async void Actualizar()
     {
@@ -188,9 +235,15 @@ else
             alumnoActualizar);
         return resultado.IsSuccessStatusCode;
     }
-    private void ActualizarPagina()
+    private void Eliminar(Contract.Alumno row)
     {
-        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        idAlumnoEliminar = row.Id;
+        IsModalDeleteVisible = true;
+    }
+    private void CloseModalDelete()
+    {
+        IsModalDeleteVisible = false;
+        idAlumnoEliminar = null;
     }
     private async void Remover()
     {
