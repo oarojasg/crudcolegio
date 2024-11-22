@@ -32,7 +32,8 @@ else
                     <td>@alumno.FechaNacimiento</td>
                     <td><button class="btn btn-primary" 
                         @onclick="() => Editar(alumno)">Editar</button></td>
-                    <td><button class="btn btn-danger">Eliminar</button></td>
+                    <td><button class="btn btn-danger"
+                        @onclick="() => Eliminar(alumno)">Eliminar</button></td>
                 </tr>
             }
         </tbody>
@@ -40,14 +41,14 @@ else
 
 }
 
-@if (IsModalVisible)
+@if (IsModalUpdateVisible)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Editar alumno</h5>
-                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                    <button type="button" class="btn-close" @onclick="CloseModalUpdate"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -71,8 +72,29 @@ else
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModalUpdate">Cerrar</button>
                     <button type="button" class="btn btn-primary" @onclick="Actualizar">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (IsModalDeleteVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Eliminar alumno</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModalDelete"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Está seguro de eliminar el registro?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModalDelete">No</button>
+                    <button type="button" class="btn btn-primary" @onclick="Remover">Si</button>
                 </div>
             </div>
         </div>
@@ -90,7 +112,9 @@ else
     }
     private Contract.Alumnos? estudiantes;
     private Contract.Alumno[]? alumnos;
-    private bool IsModalVisible { get; set; }
+    private bool IsModalUpdateVisible { get; set; }
+    private bool IsModalDeleteVisible { get; set; }
+    private int? idAlumnoEliminar { get; set; }
     private RowData? alumno { get; set; }
     private string? _baseAddress;
 
@@ -122,12 +146,22 @@ else
             Genero = row.Genero,
             FechaNacimiento = row.FechaNacimiento
         };
-        IsModalVisible = true;
+        IsModalUpdateVisible = true;
     }
-    private void CloseModal()
+    private void Eliminar(Contract.Alumno row)
     {
-        IsModalVisible = false;
+        idAlumnoEliminar = row.Id;
+        IsModalDeleteVisible = true;
+    }
+    private void CloseModalUpdate()
+    {
+        IsModalUpdateVisible = false;
         alumno = null;
+    }
+    private void CloseModalDelete()
+    {
+        IsModalDeleteVisible = false;
+        idAlumnoEliminar = null;
     }
     private async void Actualizar()
     {
@@ -157,5 +191,18 @@ else
     private void ActualizarPagina()
     {
         Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+    private async void Remover()
+    {
+        try
+        {
+            var resultado = await Http.DeleteFromJsonAsync<int>(
+                $"{_baseAddress}/Alumno?id={idAlumnoEliminar}");
+            if (resultado > 0) ActualizarPagina();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 }
