@@ -7,5 +7,7 @@ namespace CrudColegio.Domain.DomainObjects
         public int? AlumnoId { get; set; }
         public int? GradoId { get; set; }
         public int? Seccion { get; set; }
+        public Alumno? Alumno { get; set; }
+        public Grado? Grado { get; set; }
     }
 }

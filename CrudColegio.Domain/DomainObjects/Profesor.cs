@@ -7,5 +7,6 @@ namespace CrudColegio.Domain.DomainObjects
         public string? Nombre { get; set; }
         public string? Apellidos { get; set; }
         public char? Genero { get; set; }
+        public ICollection<Grado>? Grados { get; set; }
     }
 }
