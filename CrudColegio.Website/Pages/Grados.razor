@@ -1,6 +1,7 @@
 ﻿@page "/grados"
 @inject HttpClient Http
 @inject IConfiguration Configuration
+@inject NavigationManager Navigation
 
 <PageTitle>Grados</PageTitle>
 
@@ -27,27 +28,112 @@ else
                     <td>@ObtenerNombreCompletoProfesor(grado.ProfesorId ?? 0)</td>
                     <td>
                         <button class="btn btn-primary"
-                        @onclick="() => Editar(grado.Id)">
+                        @onclick="() => Editar(grado)">
                             Editar
                         </button>
                     </td>
-                    <td><button class="btn btn-danger">Eliminar</button></td>
+                    <td>
+                        <button class="btn btn-danger"
+                        @onclick="() => Eliminar(grado)">
+                            Eliminar
+                        </button>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+    <br />
+    <button class="btn btn-primary" @onclick="Crear">Crear</button>
+}
 
+@if (IsModalUpdateVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(tituloModalEditar ?? "")</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModalUpdate"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editarNombre" class="form-label">Nombre</label>
+                        <input type="text" id="editarNombre" class="form-control" @bind="grado!.Nombre" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarProfesor" class="form-label">Profesor</label>
+                        <select id="editarProfesor" class="form-select" @bind="grado.ProfesorId">
+                            <option value="null">Seleccionar profesor</option>
+                            @foreach (var profesor in profesores!)
+                            {
+                                <option value="@profesor.Id">
+                                    @ObtenerNombreCompletoDe(profesor)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModalUpdate">Cerrar</button>
+                    <button type="button" class="btn btn-primary" @onclick="GuardarCambios">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (IsModalDeleteVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Eliminar alumno</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModalDelete"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Está seguro de eliminar el registro?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModalDelete">No</button>
+                    <button type="button" class="btn btn-primary" @onclick="Remover">Si</button>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @code {
-
-    private Contract.Grados? gruposGrados;
-    private Contract.Grado[]? grados;
+    public class RowData
+    {
+        public int Id { get; set; }
+        public string? Nombre { get; set; }
+        public int? ProfesorId { get; set; }
+    }
     private Contract.Profesores? docentes;
     private Contract.Profesor[]? profesores;
+    private Contract.Grados? gruposGrados;
+    private Contract.Grado[]? grados;
+    private bool IsModalUpdateVisible { get; set; }
+    private bool IsModalDeleteVisible { get; set; }
+    private int? idGradoEditar { get; set; }
+    private int? idGradoEliminar { get; set; }
+    private RowData? grado { get; set; }
     private string? _baseAddress;
+    private string? tituloModalEditar;
 
     protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _baseAddress = Configuration.GetSection("ApiBaseAddress").Value;
+            await CargarDatosTabla();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private async Task CargarDatosTabla()
     {
         try
         {
@@ -65,11 +151,122 @@ else
     private string ObtenerNombreCompletoProfesor(int id)
     {
         var profesor = profesores!.FirstOrDefault(p => p.Id.Equals(id));
+        return ObtenerNombreCompletoDe(profesor!);
+    }
+    private string ObtenerNombreCompletoDe(Contract.Profesor profesor)
+    {
         return $"{profesor!.Nombre} {profesor.Apellidos}";
     }
-    private void Editar(int id)
+    private void Crear()
     {
-
-        var grado = grados!.FirstOrDefault(grado => grado.Id.Equals(id));
+        grado = new RowData();
+        AbrirModalEditar();
+    }
+    private void Editar(Contract.Grado row)
+    {
+        grado = new RowData
+            {
+                Id = row.Id,
+                Nombre = row.Nombre,
+                ProfesorId = row.ProfesorId
+            };
+        AbrirModalEditar();
+    }
+    private void AbrirModalEditar()
+    {
+        ConfigurarTituloEditar();
+        IsModalUpdateVisible = true;
+    }
+    private void ConfigurarTituloEditar()
+    {
+        if (EsNuevoRegistro()) tituloModalEditar = "Crear Grado";
+        else tituloModalEditar = "Editar Grado";
+    }
+    private bool EsNuevoRegistro()
+    {
+        return grado?.Id == null || grado.Id == 0;
+    }
+    private void CloseModalUpdate()
+    {
+        IsModalUpdateVisible = false;
+        grado = null;
+    }
+    private void GuardarCambios()
+    {
+        if (EsNuevoRegistro()) Anadir();
+        else Actualizar();
+    }
+    private async void Anadir()
+    {
+        try
+        {
+            var actualizacionExitosa = await CrearBackend();
+            if (actualizacionExitosa) ActualizarPagina();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private async Task<bool> CrearBackend()
+    {
+        Contract.Grado gradoCrear = new Contract.Grado(
+            (int)grado!.Id,
+            grado.Nombre,
+            grado.ProfesorId);
+        var resultado = await Http.PostAsJsonAsync<Contract.Grado>(
+            $"{_baseAddress}/Grado",
+            gradoCrear);
+        return resultado.IsSuccessStatusCode;
+    }
+    private void ActualizarPagina()
+    {
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+    private async void Actualizar()
+    {
+        try
+        {
+            var actualizacionExitosa = await ActualizarBackend();
+            if (actualizacionExitosa) ActualizarPagina();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private async Task<bool> ActualizarBackend()
+    {
+        Contract.Grado gradoActualizar = new Contract.Grado(
+            (int)grado!.Id,
+            grado.Nombre,
+            grado.ProfesorId);
+        var resultado = await Http.PutAsJsonAsync<Contract.Grado>(
+            $"{_baseAddress}/Grado",
+            gradoActualizar);
+        return resultado.IsSuccessStatusCode;
+    }
+    private void Eliminar(Contract.Grado row)
+    {
+        idGradoEliminar = row.Id;
+        IsModalDeleteVisible = true;
+    }
+    private void CloseModalDelete()
+    {
+        IsModalDeleteVisible = false;
+        idGradoEliminar = null;
+    }
+    private async void Remover()
+    {
+        try
+        {
+            var resultado = await Http.DeleteFromJsonAsync<int>(
+                $"{_baseAddress}/Grado?id={idGradoEliminar}");
+            if (resultado > 0) ActualizarPagina();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 }
