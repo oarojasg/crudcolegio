@@ -201,14 +201,14 @@
       "netstandard.dll": "sha256-2\/SuexPFW8hizUgbgPcchYHfG\/zmGzzMN6ESSyefPRQ=",
       "System.Private.CoreLib.dll": "sha256-mcywrbK0VZXiOvZ4dxU1ocaPZFplCRSIPQ\/wFikcrus=",
       "CrudColegio.Contract.dll": "sha256-nojeLtUqyzzxShr2h2YYcMQseHjPWS6Dg9FehsXR4s8=",
-      "CrudColegio.Website.dll": "sha256-lzQTN9w5yCMdQ+Up238QRM2\/Pm7oXRZJlE7DbfZTSrQ="
+      "CrudColegio.Website.dll": "sha256-ilJ4YPvUilPN\/8faPBLaNrwYUQg1TYl3a5XSg7OoeD0="
     },
     "extensions": null,
     "lazyAssembly": null,
     "libraryInitializers": null,
     "pdb": {
       "CrudColegio.Contract.pdb": "sha256-gugWP5n4fYumYGZ5prx7MEYzf23exMHKMPyJ93rhUyA=",
-      "CrudColegio.Website.pdb": "sha256-Lyo9M6txObZCCTqQOAqLlF5IzESoSkmB1itdw1SCoFM="
+      "CrudColegio.Website.pdb": "sha256-U4Ggt3IxVIiqYfuQnHDpg26utkNj\/+9pY6vTzUGD25Y="
     },
     "runtime": {
       "dotnet.7.0.3.hri5zo4ia1.js": "sha256-DxGvmbtUa6hGJpk3VyMEbkPZ653qWbQkh8X4ZVM9TWM=",
