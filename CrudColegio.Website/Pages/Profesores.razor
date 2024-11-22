@@ -1,6 +1,7 @@
 ﻿@page "/profesores"
 @inject HttpClient Http
 @inject IConfiguration Configuration
+@inject NavigationManager Navigation
 
 <PageTitle>Profesores</PageTitle>
 
@@ -29,25 +30,108 @@ else
                     <td>@profesor.Genero</td>
                     <td>
                         <button class="btn btn-primary"
-                        @onclick="() => Editar(profesor.Id)">
-                            Editar
+                        @onclick="() => Editar(profesor)">Editar</button></td>
+                    <td>
+                        <button class="btn btn-danger"
+                        @onclick="() => Eliminar(profesor)">
+                            Eliminar
                         </button>
                     </td>
-                    <td><button class="btn btn-danger">Eliminar</button></td>
                 </tr>
             }
         </tbody>
     </table>
+    <br />
+    <button class="btn btn-primary" @onclick="Crear">Crear</button>
+}
 
+@if (IsModalUpdateVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(tituloModalEditar ?? "")</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModalUpdate"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editarNombre" class="form-label">Nombre</label>
+                        <input type="text" id="editarNombre" class="form-control" @bind="profesor!.Nombre" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarApellidos" class="form-label">Apellidos</label>
+                        <input type="text" id="editarApellidos" class="form-control" @bind="profesor!.Apellidos" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarGenero" class="form-label">Género</label>
+                        <select id="editarGenero" class="form-select" @bind="profesor!.Genero">
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModalUpdate">Cerrar</button>
+                    <button type="button" class="btn btn-primary" @onclick="GuardarCambios">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (IsModalDeleteVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Eliminar alumno</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModalDelete"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Está seguro de eliminar el registro?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModalDelete">No</button>
+                    <button type="button" class="btn btn-primary" @onclick="Remover">Si</button>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @code {
-
+    public class RowData
+    {
+        public int Id { get; set; }
+        public string? Nombre { get; set; }
+        public string? Apellidos { get; set; }
+        public char? Genero { get; set; }
+    }
     private Contract.Profesores? docentes;
     private Contract.Profesor[]? profesores;
+    private bool IsModalUpdateVisible { get; set; }
+    private bool IsModalDeleteVisible { get; set; }
+    private int? idProfesorEditar { get; set; }
+    private int? idProfesorEliminar { get; set; }
+    private RowData? profesor { get; set; }
     private string? _baseAddress;
+    private string? tituloModalEditar;
 
     protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _baseAddress = Configuration.GetSection("ApiBaseAddress").Value;
+            await CargarDatosTabla();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private async Task CargarDatosTabla()
     {
         try
         {
@@ -60,10 +144,120 @@ else
             throw ex;
         }
     }
-    private void Editar(int id)
+    private void Crear()
     {
-
-        var profesor = profesores!.FirstOrDefault(profesor => profesor.Id.Equals(id));
+        profesor = new RowData();
+        AbrirModalEditar();
+    }
+    private void Editar(Contract.Profesor row)
+    {
+        profesor = new RowData
+            {
+                Id = row.Id,
+                Nombre = row.Nombre,
+                Apellidos = row.Apellidos,
+                Genero = row.Genero
+            };
+        AbrirModalEditar();
+    }
+    private void AbrirModalEditar()
+    {
+        ConfigurarTituloEditar();
+        IsModalUpdateVisible = true;
+    }
+    private void ConfigurarTituloEditar()
+    {
+        if (EsNuevoRegistro()) tituloModalEditar = "Crear Profesor";
+        else tituloModalEditar = "Editar Profesor";
+    }
+    private bool EsNuevoRegistro()
+    {
+        return profesor?.Id == null || profesor.Id == 0;
+    }
+    private void CloseModalUpdate()
+    {
+        IsModalUpdateVisible = false;
+        profesor = null;
+    }
+    private void GuardarCambios()
+    {
+        if (EsNuevoRegistro()) Anadir();
+        else Actualizar();
+    }
+    private async void Anadir()
+    {
+        try
+        {
+            var actualizacionExitosa = await CrearBackend();
+            if (actualizacionExitosa) ActualizarPagina();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private async Task<bool> CrearBackend()
+    {
+        Contract.Profesor profesorCrear = new Contract.Profesor(
+            (int)profesor!.Id,
+            profesor.Nombre,
+            profesor.Apellidos,
+            profesor.Genero);
+        var resultado = await Http.PostAsJsonAsync<Contract.Profesor>(
+            $"{_baseAddress}/Profesor",
+            profesorCrear);
+        return resultado.IsSuccessStatusCode;
+    }
+    private void ActualizarPagina()
+    {
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+    private async void Actualizar()
+    {
+        try
+        {
+            var actualizacionExitosa = await ActualizarBackend();
+            if (actualizacionExitosa) ActualizarPagina();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    private async Task<bool> ActualizarBackend()
+    {
+        Contract.Profesor profesorActualizar = new Contract.Profesor(
+            (int)profesor!.Id,
+            profesor.Nombre,
+            profesor.Apellidos,
+            profesor.Genero);
+        var resultado = await Http.PutAsJsonAsync<Contract.Profesor>(
+            $"{_baseAddress}/Profesor",
+            profesorActualizar);
+        return resultado.IsSuccessStatusCode;
+    }
+    private void Eliminar(Contract.Profesor row)
+    {
+        idProfesorEliminar = row.Id;
+        IsModalDeleteVisible = true;
+    }
+    private void CloseModalDelete()
+    {
+        IsModalDeleteVisible = false;
+        idProfesorEliminar = null;
+    }
+    private async void Remover()
+    {
+        try
+        {
+            var resultado = await Http.DeleteFromJsonAsync<int>(
+                $"{_baseAddress}/Profesor?id={idProfesorEliminar}");
+            if (resultado > 0) ActualizarPagina();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 }
 
